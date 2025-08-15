@@ -1,26 +1,16 @@
-# ECOFIN — Demo React App (Vite)
+# ECOFIN – Site (Vite + React + Tailwind)
 
-This is a small demo scaffold created from the code you provided in the chat.
-It includes lightweight UI component stubs so it can run without external UI libraries.
+## Como rodar localmente
+```bash
+npm install
+npm run dev
+```
 
-How to run locally:
+## Deploy na Vercel
+1. Faça upload deste repositório no GitHub (ou importe direto na Vercel).
+2. Na Vercel, selecione o framework **Vite** (React).
+3. Build Command: `npm run build`
+4. Output Directory: `dist`
+5. Install Command: `npm install`
 
-1. Unzip and enter the folder:
-   ```bash
-   cd ecofin
-   npm install
-   npm run dev
-   ```
-2. Open http://localhost:5173
-
-How to deploy to Vercel:
-
-- Option A — Upload ZIP:
-  - Compress this folder to `ecofin.zip`
-  - In Vercel dashboard choose "New Project" -> "Import Project" -> "Upload" and upload the zip.
-
-- Option B — GitHub:
-  - Initialize a git repo, push to GitHub and import that repo in Vercel.
-
-Notes:
-- Tailwind + Vite are configured; if you want the original design system components instead of the simple stubs, replace `src/components/ui/*` with your preferred library components and adjust imports.
+Tailwind já está configurado. Os componentes `ui/*` são implementações simples para este projeto.

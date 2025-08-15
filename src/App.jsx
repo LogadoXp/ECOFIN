@@ -1,5 +1,4 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
-import './index.css'
 import { motion } from "framer-motion";
 import {
   Leaf,
@@ -13,29 +12,24 @@ import {
   Download,
   Plus,
   Trash2,
-  Sun,
-  Moon,
   Star,
   FileText,
   ChevronRight,
   Users,
   CheckCircle2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
+import { Button } from "./components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
+import { Input } from "./components/ui/input";
+import { Textarea } from "./components/ui/textarea";
+import { Label } from "./components/ui/label";
+import { Badge } from "./components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog";
+import { Switch } from "./components/ui/switch";
+import { Slider } from "./components/ui/slider";
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 
-// --------------------
-// UTILIDADES
-// --------------------
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -51,13 +45,8 @@ const Pill = ({ children }) => (
   </span>
 );
 
-// --------------------
-// TEMA (Light/Dark)
-// --------------------
 function useThemeToggle() {
   const [theme, setTheme] = useState("light");
-
-  // Inicializa respeitando o sistema e preferência salva
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = localStorage.getItem("theme");
@@ -65,8 +54,6 @@ function useThemeToggle() {
     const initial = stored || (mql.matches ? "dark" : "light");
     setTheme(initial);
     document.documentElement.classList.toggle("dark", initial === "dark");
-
-    // Atualiza se o tema do sistema mudar *e* o usuário não tiver escolhido manualmente
     const onChange = (e) => {
       if (!localStorage.getItem("theme")) {
         const next = e.matches ? "dark" : "light";
@@ -77,13 +64,10 @@ function useThemeToggle() {
     mql.addEventListener("change", onChange);
     return () => mql.removeEventListener("change", onChange);
   }, []);
-
-  // Aplica sempre que o estado mudar
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
-
   const toggle = () => {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark";
@@ -91,28 +75,19 @@ function useThemeToggle() {
       return next;
     });
   };
-
   return { theme, toggle };
 }
 
-// --------------------
-// CALCULADORA DE PEGADA DE CARBONO (simplificada e educacional)
-// --------------------
 function CarbonCalculator() {
-  const [energy, setEnergy] = useState([150]); // kWh/mês
-  const [carKm, setCarKm] = useState([300]); // km/mês
-  const [meat, setMeat] = useState([7]); // refeições c/ carne por semana
-
-  // fatores médios (aprox. didáticos)
-  const co2FromEnergy = energy[0] * 0.06; // kg CO2 / kWh
-  const co2FromCar = carKm[0] * 0.192; // kg CO2 / km
-  const co2FromMeat = meat[0] * 27 * 4; // kg CO2 / refeição (mês)
-
+  const [energy, setEnergy] = useState([150]);
+  const [carKm, setCarKm] = useState([300]);
+  const [meat, setMeat] = useState([7]);
+  const co2FromEnergy = energy[0] * 0.06;
+  const co2FromCar = carKm[0] * 0.192;
+  const co2FromMeat = meat[0] * 27 * 4;
   const monthly = co2FromEnergy + co2FromCar + co2FromMeat;
   const yearly = monthly * 12;
-
   const projection = useMemo(() => {
-    // projeção de economia assumindo redução de 3% ao mês com ações sugeridas
     const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     let current = monthly;
     return months.map((m) => {
@@ -121,7 +96,6 @@ function CarbonCalculator() {
       return point;
     });
   }, [monthly]);
-
   return (
     <Card className="rounded-2xl">
       <CardHeader>
@@ -146,7 +120,6 @@ function CarbonCalculator() {
             <div className="mt-2 text-sm opacity-80">{meat[0]} /semana → ~{co2FromMeat.toFixed(1)} kg CO₂/mês</div>
           </div>
         </div>
-
         <div className="grid md:grid-cols-3 gap-4">
           <Card className="bg-emerald-600 dark:bg-emerald-600">
             <CardHeader className="py-3 text-white">
@@ -167,7 +140,6 @@ function CarbonCalculator() {
             </CardHeader>
           </Card>
         </div>
-
         <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={projection} margin={{ top: 10, right: 24, left: 0, bottom: 0 }}>
@@ -179,8 +151,7 @@ function CarbonCalculator() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-
-        <div className="grid   md:grid-cols-3 gap-4 text-sm">
+        <div className="grid md:grid-cols-3 gap-4 text-sm">
           <Pill><Recycle className="h-4 w-4"/> Troque para LED</Pill>
           <Pill><Sprout className="h-4 w-4"/> 2 refeições sem carne/semana</Pill>
           <Pill><Globe2 className="h-4 w-4"/> Carona/Transporte público 1x/semana</Pill>
@@ -190,9 +161,6 @@ function CarbonCalculator() {
   );
 }
 
-// --------------------
-// MATERIAIS DO ESTANDE (galeria + anexos em memória)
-// --------------------
 function MaterialsHub() {
   const [items, setItems] = useState([
     { id: 1, title: "Folder – Visão ECOFIN", type: "PDF", note: "Resumo do propósito e pilares", link: "#" },
@@ -203,7 +171,6 @@ function MaterialsHub() {
   const [type, setType] = useState("PDF");
   const [note, setNote] = useState("");
   const [link, setLink] = useState("");
-
   const addItem = () => {
     if (!title) return;
     setItems((prev) => [
@@ -212,9 +179,7 @@ function MaterialsHub() {
     ]);
     setTitle(""); setType("PDF"); setNote(""); setLink("");
   };
-
   const removeItem = (id) => setItems((prev) => prev.filter((i) => i.id !== id));
-
   const exportJSON = () => {
     const data = JSON.stringify(items, null, 2);
     const blob = new Blob([data], { type: "application/json" });
@@ -225,7 +190,6 @@ function MaterialsHub() {
     a.click();
     URL.revokeObjectURL(url);
   };
-
   return (
     <div className="space-y-6">
       <div className="grid md:grid-cols-4 gap-4">
@@ -293,9 +257,6 @@ function MaterialsHub() {
   );
 }
 
-// --------------------
-// PORTFÓLIO / PROVA DE CONCEITO
-// --------------------
 const SAMPLE_PROJECTS = [
   { id: 1, name: "Monitor Verde", tags: ["IoT", "Energia"], impact: "-18% consumo", desc: "Sensoriamento e automação de iluminação em prédio público.", icon: <Building2 className="h-4 w-4"/> },
   { id: 2, name: "Água 360", tags: ["Água", "Dados"], impact: "-24% desperdício", desc: "Telemetria de hidrômetros e dashboards de alerta.", icon: <Globe2 className="h-4 w-4"/> },
@@ -307,7 +268,6 @@ function Portfolio() {
   const [filter, setFilter] = useState("Todos");
   const tags = ["Todos", "IoT", "Energia", "Água", "Dados", "Resíduos", "Educação", "CO₂", "Software"];
   const list = SAMPLE_PROJECTS.filter(p => filter === "Todos" || p.tags.includes(filter));
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-2">
@@ -339,14 +299,10 @@ function Portfolio() {
   );
 }
 
-// --------------------
-// INTERAÇÃO ONLINE (pledge + leads)
-// --------------------
 function Interaction() {
   const [pledges, setPledges] = useState(128);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const leadsRef = useRef([]);
-
   const submit = (e) => {
     e.preventDefault();
     if (!form.name || !form.email) return;
@@ -354,7 +310,6 @@ function Interaction() {
     leadsRef.current.push({ ...form, ts: new Date().toISOString() });
     setForm({ name: "", email: "", message: "" });
   };
-
   const exportLeads = () => {
     const data = JSON.stringify(leadsRef.current, null, 2);
     const blob = new Blob([data], { type: "application/json" });
@@ -365,7 +320,6 @@ function Interaction() {
     a.click();
     URL.revokeObjectURL(url);
   };
-
   return (
     <div className="grid md:grid-cols-2 gap-8">
       <Card className="rounded-2xl">
@@ -399,7 +353,6 @@ function Interaction() {
           </div>
         </CardContent>
       </Card>
-
       <Card className="rounded-2xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2"><Users className="h-5 w-5"/> Ações rápidas da comunidade</CardTitle>
@@ -433,10 +386,7 @@ function Interaction() {
   );
 }
 
-// --------------------
-// NAVBAR & FOOTER
-// --------------------
-function Navbar({ onToggleTheme, theme }) {
+function Navbar() {
   const links = [
     { href: "#sobre", label: "O que é a ECOFIN" },
     { href: "#materiais", label: "Materiais do estande" },
@@ -444,7 +394,6 @@ function Navbar({ onToggleTheme, theme }) {
     { href: "#portfolio", label: "Portfólio" },
     { href: "#contato", label: "Contato" },
   ];
-
   return (
     <div className="sticky top-0 z-50 border-b bg-white/80 dark:bg-neutral-950/70 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
@@ -456,7 +405,6 @@ function Navbar({ onToggleTheme, theme }) {
           {links.map(l => <a key={l.href} href={l.href} className="opacity-80 hover:opacity-100 transition">{l.label}</a>)}
         </nav>
         <div className="flex items-center gap-2">
-          
           <a href="#contato"><Button className="rounded-2xl hover:bg-blue-500">Fale conosco</Button></a>
         </div>
       </div>
@@ -492,17 +440,11 @@ function Footer() {
   );
 }
 
-// --------------------
-// PÁGINA PRINCIPAL
-// --------------------
 export default function App() {
   const { theme, toggle } = useThemeToggle();
-
   return (
     <div className="min-h-dvh bg-gradient-to-b from-emerald-50 to-white dark:from-neutral-950 dark:to-neutral-950 text-neutral-900 dark:text-neutral-50">
-      <Navbar onToggleTheme={toggle} theme={theme}/>
-
-      {/* HERO */}
+      <Navbar />
       <Section id="home" className="pt-10">
         <div className="mx-auto max-w-7xl px-4 grid lg:grid-cols-2 gap-10 items-center">
           <motion.div {...fadeUp}>
@@ -530,8 +472,6 @@ export default function App() {
           </motion.div>
         </div>
       </Section>
-
-      {/* SOBRE */}
       <Section id="sobre" className="bg-white/60 dark:bg-neutral-900/40">
         <div className="mx-auto max-w-7xl px-4 grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
@@ -578,8 +518,6 @@ export default function App() {
           </div>
         </div>
       </Section>
-
-      {/* MATERIAIS */}
       <Section id="materiais">
         <div className="mx-auto max-w-7xl px-4">
           <motion.h2 {...fadeUp} className="text-3xl md:text-4xl font-semibold tracking-tight mb-2">Materiais apresentados no estande</motion.h2>
@@ -587,8 +525,6 @@ export default function App() {
           <MaterialsHub/>
         </div>
       </Section>
-
-      {/* INTERAÇÃO */}
       <Section id="interacao" className="bg-white/60 dark:bg-neutral-900/40">
         <div className="mx-auto max-w-7xl px-4">
           <motion.h2 {...fadeUp} className="text-3xl md:text-4xl font-semibold tracking-tight mb-2">Interação online</motion.h2>
@@ -596,8 +532,6 @@ export default function App() {
           <Interaction/>
         </div>
       </Section>
-
-      {/* PORTFÓLIO */}
       <Section id="portfolio">
         <div className="mx-auto max-w-7xl px-4">
           <motion.h2 {...fadeUp} className="text-3xl md:text-4xl font-semibold tracking-tight mb-2">Portfólio / Prova de Conceito</motion.h2>
@@ -605,8 +539,6 @@ export default function App() {
           <Portfolio/>
         </div>
       </Section>
-
-      {/* CONTATO */}
       <Section id="contato" className="bg-white/60 dark:bg-neutral-900/40">
         <div className="mx-auto max-w-7xl px-4 grid md:grid-cols-2 gap-8">
           <div>
@@ -653,7 +585,6 @@ export default function App() {
           </Card>
         </div>
       </Section>
-
       <Footer/>
     </div>
   );
