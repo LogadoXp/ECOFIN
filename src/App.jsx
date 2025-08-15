@@ -20,16 +20,16 @@ import {
   Users,
   CheckCircle2,
 } from "lucide-react";
-import { Button } from "./components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
-import { Input } from "./components/ui/input";
-import { Textarea } from "./components/ui/textarea";
-import { Label } from "./components/ui/label";
-import { Badge } from "./components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog";
-import { Switch } from "./components/ui/switch";
-import { Slider } from "./components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 
 // --------------------
@@ -73,12 +73,8 @@ function useThemeToggle() {
         document.documentElement.classList.toggle("dark", next === "dark");
       }
     };
-    if (mql.addEventListener) mql.addEventListener("change", onChange);
-    else if (mql.addListener) mql.addListener(onChange);
-    return () => {
-      if (mql.removeEventListener) mql.removeEventListener("change", onChange);
-      else if (mql.removeListener) mql.removeListener(onChange);
-    };
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
   }, []);
 
   // Aplica sempre que o estado mudar
@@ -90,7 +86,7 @@ function useThemeToggle() {
   const toggle = () => {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark";
-      try { localStorage.setItem("theme", next); } catch (e) {}
+      localStorage.setItem("theme", next);
       return next;
     });
   };
@@ -459,7 +455,7 @@ function Navbar({ onToggleTheme, theme }) {
           {links.map(l => <a key={l.href} href={l.href} className="opacity-80 hover:opacity-100 transition">{l.label}</a>)}
         </nav>
         <div className="flex items-center gap-2">
-
+          
           <a href="#contato"><Button className="rounded-2xl hover:bg-blue-500">Fale conosco</Button></a>
         </div>
       </div>
