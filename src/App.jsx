@@ -45,7 +45,7 @@ const Section = ({ id, className = "", children }) => (
 );
 
 const Pill = ({ children }) => (
-  <span className="inline-flex items-center gap-2 rounded-2xl border px-3 py-1 text-xs md:text-sm shadow-sm bg-white-50 dark:bg-black-30 backdrop-blur">
+  <span className="inline-flex items-center gap-2 rounded-2xl border px-3 py-1 text-xs md:text-sm shadow-sm bg-black-30 dark:bg-black-30 backdrop-blur">
     {children}
   </span>
 );
