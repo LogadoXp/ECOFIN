@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
+import './index.css'
 import { motion } from "framer-motion";
 import {
   Leaf,
